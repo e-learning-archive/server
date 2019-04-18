@@ -1,0 +1,54 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes: 
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    expose:
+      - "3306"
+
+  streamer:
+    build: streamer/
+    volumes:
+      - streamer_videos:/var/www/html/videos/
+    environment:
+      VIRTUAL_HOST: "${STREAMER_HOSTNAME}"
+      VIRTUAL_PORT: 8000
+    expose:
+      - "8000"
+    depends_on:
+      - db
+
+  encoder:
+    build: encoder/
+    volumes:
+      - encoder_videos:/var/www/html/videos/
+    environment:
+      VIRTUAL_HOST: "${ENCODER_HOSTNAME}"
+      VIRTUAL_PORT: 8000
+    expose:
+      - "8000"
+    depends_on:
+      - db
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx-proxy/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
+    depends_on:
+      - streamer
+      - encoder
+
+volumes:
+  db_data: {}
+  encoder_videos: {}
+  streamer_videos: {}
