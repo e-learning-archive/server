@@ -48,4 +48,4 @@ git checkout -- config/encoder/configuration.php
 
 # finally, bring everything online
 echo -e "\e[32mStarting services\e[39m"
-docker-compose up
+docker-compose up -d
