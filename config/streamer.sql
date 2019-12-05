@@ -440,7 +440,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','','nope@none.com','fcbc6f8eb22ea649e8c9da9c016c2bea','2019-12-04 14:54:46','2019-12-05 09:32:31',1,'a',NULL,'2019-12-05 09:32:31',NULL,NULL,0,0,0,'','5de7c8f4d427f',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,''),(2,'edward','Ed','edward@infostreams.net','97f59ad09daac4d3cb9cb24805ad3a8c','2019-12-05 08:58:14','2019-12-05 10:35:25',0,'a',NULL,'2019-12-05 10:35:25',NULL,NULL,0,0,0,NULL,'5de8c6a613b03',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `users` VALUES (1,'admin','','nope@none.com','fcbc6f8eb22ea649e8c9da9c016c2bea','2019-12-04 14:54:46','2019-12-05 09:32:31',1,'a',NULL,'2019-12-05 09:32:31',NULL,NULL,0,0,0,'','5de7c8f4d427f',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -587,7 +587,7 @@ CREATE TABLE `videos` (
   CONSTRAINT `fk_videos_sites1` FOREIGN KEY (`sites_id`) REFERENCES `sites` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_videos_users` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_videos_videos1` FOREIGN KEY (`next_videos_id`) REFERENCES `videos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -596,7 +596,6 @@ CREATE TABLE `videos` (
 
 LOCK TABLES `videos` WRITE;
 /*!40000 ALTER TABLE `videos` DISABLE KEYS */;
-INSERT INTO `videos` VALUES (1,'I Fart In Your General Direction!','i-fart-in-your-general-direction-','Funny stuff From monty python and the Holy Grail\n\nCheck out my other videos if you like Black Ops montages or just want to be a nice person and help me get a few steam achievements by watching my TF2 gameplay video.',3,2,2,2,2,'a','2019-12-04 15:26:05','2019-12-05 08:54:58',1,1,'_YPTuniqid_5de7d00d61bbb3.36092909','0:00:24','video','https://www.youtube.com/watch?v=FWBUl7oT9sA',1,0,1,'','',NULL,0,'','','',0.00,0,0,'','',0,NULL,NULL),(3,'Lecture 1: Introduction to Power and Politics in Todays World','lecture-1-introduction-to-power-and-politics-in-todays-world','Professor Ian Shapiro introduces the class â€œPower and Politics in Todayâ€™s World.â€\nThis course provides an examination of political dynamics and institutions over this past tumultuous quarter century, and the implications of these changes for what comes next. Among the topics covered are the decline of trade unions and enlarged role of business as political forces, changing attitudes towards parties and other political institutions amidst the growth of inequality and middle-class insecurity, the emergence of new forms of authoritarianism, and the character and durability of the unipolar international order that replaced the Cold War.',6,3,3,2,0,'a','2019-12-05 08:30:39','2019-12-05 10:43:07',1,1,'_YPTuniqid_5de8c02f22b2c8.84877453','0:56:14','video','https://www.youtube.com/watch?v=BDqvzFY72mg',1,0,1,'','',NULL,0,'','','',0.00,0,0,'','',0,NULL,NULL);
 /*!40000 ALTER TABLE `videos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -652,7 +651,7 @@ CREATE TABLE `videos_statistics` (
   KEY `session_id_statistics` (`session_id`),
   CONSTRAINT `fk_videos_statistics_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_videos_statistics_videos1` FOREIGN KEY (`videos_id`) REFERENCES `videos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -661,7 +660,6 @@ CREATE TABLE `videos_statistics` (
 
 LOCK TABLES `videos_statistics` WRITE;
 /*!40000 ALTER TABLE `videos_statistics` DISABLE KEYS */;
-INSERT INTO `videos_statistics` VALUES (1,'2019-12-04 15:26:34','85.212.227.111',1,1,'2019-12-04 15:26:34','2019-12-04 15:29:10',25,'e04956ea95236d4d4620f2a13fa7bb24'),(2,'2019-12-05 08:27:28','46.80.92.107',NULL,1,'2019-12-05 08:27:28','2019-12-05 08:27:31',25,'e5015d9f109adc6ffb04dc05d716f5eb'),(3,'2019-12-05 08:54:58','46.80.92.107',NULL,1,'2019-12-05 08:54:58','2019-12-05 08:54:58',0,'e50754b64978ec92be9d22906c41cdb0'),(4,'2019-12-05 09:16:30','46.80.92.107',2,3,'2019-12-05 09:16:30','2019-12-05 09:17:08',3075,'ad21d91f8b717b898a1c88459e82a066'),(5,'2019-12-05 10:19:35','46.80.92.107',2,3,'2019-12-05 10:19:35','2019-12-05 10:19:35',3075,'6f7c681fa88024e2eac4d378449acfbd'),(6,'2019-12-05 10:22:29','46.80.92.107',2,3,'2019-12-05 10:22:29','2019-12-05 10:22:29',3075,'6f7c681fa88024e2eac4d378449acfbd'),(7,'2019-12-05 10:24:54','46.80.92.107',2,3,'2019-12-05 10:24:54','2019-12-05 10:24:54',3075,'3df9607a64f929335e8b61305e660ca6'),(8,'2019-12-05 10:25:02','46.80.92.107',2,3,'2019-12-05 10:25:02','2019-12-05 10:25:17',2160,'3df9607a64f929335e8b61305e660ca6'),(9,'2019-12-05 10:43:07','46.80.92.107',NULL,3,'2019-12-05 10:43:07','2019-12-05 10:43:07',0,'6f7c681fa88024e2eac4d378449acfbd');
 /*!40000 ALTER TABLE `videos_statistics` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -674,4 +672,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-05 11:38:31
+-- Dump completed on 2019-12-05 14:35:21
