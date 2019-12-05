@@ -42,7 +42,7 @@ CREATE TABLE `categories` (
   UNIQUE KEY `clean_name_UNIQUE` (`clean_name`),
   KEY `fk_categories_users1_idx` (`users_id`),
   CONSTRAINT `fk_categories_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,7 +325,7 @@ CREATE TABLE `plugins` (
 
 LOCK TABLES `plugins` WRITE;
 /*!40000 ALTER TABLE `plugins` DISABLE KEYS */;
-INSERT INTO `plugins` VALUES (1,'55a4fa56-8a30-48d4-a0fb-8aa6b3f69033','inactive','2019-12-05 08:52:54','2019-12-05 08:53:30',NULL,'CustomizeAdvanced','CustomizeAdvanced','1.0'),(2,'4c1f4f76-b336-4ddc-a4de-184efe715c09','active','2019-12-05 09:34:42','2019-12-05 10:24:29','{\"doNotAllowAnonimusAccess\":false,\"doNotAllowUpload\":true,\"hideCreateAccount\":true,\"hideTabTrending\":true,\"hideTabLive\":true,\"hideTabSubscription\":true,\"hideTabPlayLists\":false,\"EULA\":{\"type\":\"textarea\",\"value\":\"Welcome to Gulu University video lectures\"},\"themeDark\":true,\"portraitImage\":false,\"netflixStyle\":false,\"netflixDateAdded\":true,\"netflixMostPopular\":true,\"netflixMostWatched\":true,\"netflixCategories\":true,\"netflixBigVideo\":true,\"disableWhitelabel\":false}','MobileManager','MobileManager','1.0'),(3,'1apicbec-91db-4357-bb10-ee08b0913778','active','2019-12-05 10:19:16','2019-12-05 10:19:16',NULL,'API','API','1.0');
+INSERT INTO `plugins` VALUES (1,'55a4fa56-8a30-48d4-a0fb-8aa6b3f69033','active','2019-12-05 08:52:54','2019-12-05 15:44:21','{\"logoMenuBarURL\":\"http://video.infostreams.net/\",\"encoderNetwork\":\"https://network.avideo.com/\",\"useEncoderNetworkRecomendation\":false,\"doNotShowEncoderNetwork\":true,\"doNotShowUploadButton\":false,\"uploadButtonDropdownIcon\":\"fas fa-video\",\"uploadButtonDropdownText\":\"\",\"encoderNetworkLabel\":\"\",\"doNotShowUploadMP4Button\":true,\"disablePDFUpload\":false,\"uploadMP4ButtonLabel\":\"\",\"doNotShowImportMP4Button\":true,\"importMP4ButtonLabel\":\"\",\"doNotShowEncoderButton\":false,\"encoderButtonLabel\":\"\",\"doNotShowEmbedButton\":false,\"embedBackgroundColor\":\"white\",\"embedButtonLabel\":\"\",\"doNotShowEncoderHLS\":false,\"doNotShowEncoderResolutionLow\":false,\"doNotShowEncoderResolutionSD\":false,\"doNotShowEncoderResolutionHD\":false,\"doNotShowLeftMenuAudioAndVideoButtons\":false,\"doNotShowWebsiteOnContactForm\":false,\"doNotUseXsendFile\":true,\"makeVideosInactiveAfterEncode\":false,\"usePermalinks\":false,\"disableAnimatedGif\":false,\"removeBrowserChannelLinkFromMenu\":false,\"EnableWavesurfer\":false,\"EnableMinifyJS\":false,\"disableShareAndPlaylist\":false,\"disableEmailSharing\":false,\"disableComments\":false,\"commentsMaxLength\":\"200\",\"commentsNoIndex\":false,\"disableYoutubePlayerIntegration\":false,\"utf8Encode\":false,\"utf8Decode\":false,\"menuBarHTMLCode\":{\"type\":\"textarea\",\"value\":\"\"},\"underMenuBarHTMLCode\":{\"type\":\"textarea\",\"value\":\"\"},\"footerHTMLCode\":{\"type\":\"textarea\",\"value\":\"\"},\"signInOnRight\":true,\"signInOnLeft\":true,\"forceCategory\":false,\"autoPlayAjax\":false,\"disableHelpLeftMenu\":false,\"disableAboutLeftMenu\":false,\"disableContactLeftMenu\":false,\"disableNavbar\":false,\"videosCDN\":\"\",\"useFFMPEGToGenerateThumbs\":false,\"showImageDownloadOption\":false,\"doNotDisplayViews\":false,\"doNotDisplayLikes\":false,\"doNotDisplayCategoryLeftMenu\":false,\"doNotDisplayCategory\":false,\"doNotDisplayGroupsTags\":false,\"doNotDisplayPluginsTags\":false,\"showNotRatedLabel\":false,\"askRRatingConfirmationBeforePlay_G\":false,\"askRRatingConfirmationBeforePlay_PG\":false,\"askRRatingConfirmationBeforePlay_PG13\":false,\"askRRatingConfirmationBeforePlay_R\":false,\"askRRatingConfirmationBeforePlay_NC17\":true,\"askRRatingConfirmationBeforePlay_MA\":true,\"AsyncJobs\":false,\"doNotShowLeftHomeButton\":false,\"doNotShowLeftTrendingButton\":false,\"CategoryLabel\":\"Categories\",\"ShowAllVideosOnCategory\":false,\"hideCategoryVideosCount\":false,\"paidOnlyUsersTellWhatVideoIs\":false,\"paidOnlyShowLabels\":false,\"paidOnlyLabel\":\"Premium\",\"paidOnlyFreeLabel\":\"Free\",\"removeSubscribeButton\":false,\"removeThumbsUpAndDown\":false,\"videoNotFoundText\":{\"type\":\"textarea\",\"value\":\"\"},\"siteMapRowsLimit\":\"100\",\"enableOldPassHashCheck\":true,\"disableHTMLDescription\":false}','CustomizeAdvanced','CustomizeAdvanced','1.0'),(2,'4c1f4f76-b336-4ddc-a4de-184efe715c09','active','2019-12-05 09:34:42','2019-12-05 10:24:29','{\"doNotAllowAnonimusAccess\":false,\"doNotAllowUpload\":true,\"hideCreateAccount\":true,\"hideTabTrending\":true,\"hideTabLive\":true,\"hideTabSubscription\":true,\"hideTabPlayLists\":false,\"EULA\":{\"type\":\"textarea\",\"value\":\"Welcome to Gulu University video lectures\"},\"themeDark\":true,\"portraitImage\":false,\"netflixStyle\":false,\"netflixDateAdded\":true,\"netflixMostPopular\":true,\"netflixMostWatched\":true,\"netflixCategories\":true,\"netflixBigVideo\":true,\"disableWhitelabel\":false}','MobileManager','MobileManager','1.0'),(3,'1apicbec-91db-4357-bb10-ee08b0913778','active','2019-12-05 10:19:16','2019-12-05 10:19:16',NULL,'API','API','1.0');
 /*!40000 ALTER TABLE `plugins` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -388,7 +388,6 @@ CREATE TABLE `subscribes` (
 
 LOCK TABLES `subscribes` WRITE;
 /*!40000 ALTER TABLE `subscribes` DISABLE KEYS */;
-INSERT INTO `subscribes` VALUES (1,'edward@infostreams.net','i','2019-12-05 10:25:59','2019-12-05 10:26:00','46.80.92.107',1,1,2);
 /*!40000 ALTER TABLE `subscribes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -431,7 +430,7 @@ CREATE TABLE `users` (
   `donationLink` varchar(225) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_UNIQUE` (`user`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -440,7 +439,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','','nope@none.com','fcbc6f8eb22ea649e8c9da9c016c2bea','2019-12-04 14:54:46','2019-12-05 09:32:31',1,'a',NULL,'2019-12-05 09:32:31',NULL,NULL,0,0,0,'','5de7c8f4d427f',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (1,'admin','','nope@none.com','fcbc6f8eb22ea649e8c9da9c016c2bea','2019-12-04 14:54:46','2019-12-05 15:19:06',1,'a',NULL,'2019-12-05 15:19:06',NULL,NULL,0,0,0,'','5de7c8f4d427f',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -672,4 +671,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-05 14:35:21
+-- Dump completed on 2019-12-05 15:47:15
