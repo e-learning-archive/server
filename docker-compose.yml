@@ -16,6 +16,7 @@ services:
   streamer:
     build: streamer/
     volumes:
+      - ./streamer:/var/www/html/
       - streamer_videos:/var/www/html/videos/
     environment:
       VIRTUAL_HOST: "${STREAMER_HOSTNAME}"
@@ -28,6 +29,7 @@ services:
   encoder:
     build: encoder/
     volumes:
+      - ./encoder:/var/www/html/
       - encoder_videos:/var/www/html/videos/
     environment:
       VIRTUAL_HOST: "${ENCODER_HOSTNAME}"
