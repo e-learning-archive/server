@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if ! [ -f '.env' ]; then
+  echo -e '\033[32mThe .env file does not exist!!\033[39m'
+  echo "Create one by copying the .env.example file and adjusting the values."
+  echo "Exiting."
+  exit 1
+fi
+
 # we checkout a 'known good version' of the required software
 echo -e '\033[32mGetting AVideo source code\033[39m'
 git clone https://github.com/WWBN/AVideo.git streamer || true
