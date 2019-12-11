@@ -51,6 +51,18 @@ services:
       - streamer
       - encoder
 
+  coursera:
+    build:
+      context: coursera-dl
+    volumes:
+      - ./downloads/coursera/:/courses
+
+  edx:
+    build:
+      context: edx-dl
+    volumes:
+      - ./downloads/ed-x/:/Downloaded
+
 volumes:
   db_data: {}
   encoder_videos: {}

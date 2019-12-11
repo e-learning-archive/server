@@ -64,6 +64,24 @@ $SED -i s/ENCODER_HOSTNAME/${ENCODER_HOSTNAME}/g config/encoder/configuration.ph
 docker run --rm -v $PWD:/source -v gulu_encoder_videos:/dest -w /source alpine cp config/encoder/configuration.php /dest
 git checkout -- config/encoder/configuration.php
 
+
+# get the coursera downloader
+# -> use the repository that has a fix for https://github.com/coursera-dl/coursera-dl/issues/702
+echo -e "\033[32mInstalling Coursera downloader\033[39m"
+git clone https://github.com/e-learning-archive/coursera-dl.git
+
+# Change the Dockerfile so that it installs the version from the cloned repository
+$SED -i '/^ARG VERSION/i ADD . \/app' coursera-dl/Dockerfile
+$SED -i 's/RUN pip install coursera-dl==\$VERSION/RUN pip install app -r app\/requirements.txt/g' coursera-dl/Dockerfile
+$SED -i 's/ENTRYPOINT \["coursera-dl"\]/ENTRYPOINT \["\/app\/coursera-dl"\]/g' coursera-dl/Dockerfile
+docker-compose up --no-start coursera
+
+# get the edX downloader
+echo -e "\033[32mInstalling edX downloader\033[39m"
+git clone https://github.com/e-learning-archive/edx-dl.git
+docker-compose up --no-start edx
+
+
 # finally, bring everything online
 echo -e "\033[32mStarting services\033[39m"
 docker-compose up -d
