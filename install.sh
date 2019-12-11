@@ -7,10 +7,13 @@ if ! [ -f '.env' ]; then
   exit 1
 fi
 
-# we checkout a 'known good version' of the required software
-echo -e '\033[32mGetting AVideo source code\033[39m'
+# we checkout all the required software
+echo -e '\033[32mGetting source code\033[39m'
 git clone https://github.com/e-learning-archive/AVideo.git streamer || true
 git clone https://github.com/e-learning-archive/AVideo-Encoder.git encoder || true
+git clone https://github.com/e-learning-archive/coursera-dl.git || true
+git clone https://github.com/e-learning-archive/edx-dl.git || true
+
 
 # if the 'gsed' command exists, use that - otherwise, default to 'sed'
 if [ -x "$(command -v gsed)" ]; then
@@ -18,15 +21,6 @@ if [ -x "$(command -v gsed)" ]; then
 else
   SED=`which sed`
 fi
-
-# The images don't build if we use PHP 7.4 (which is what is installed
-# if we do 'FROM php:7-apache'), so we manually downgrade to PHP 7.3
-$SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' streamer/Dockerfile
-$SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' encoder/Dockerfile
-
-# Adjustments to make the 'download' button work correctly
-$SED -i 's/apt-get install -y/apt-get install -y libapache2-mod-xsendfile/g' streamer/Dockerfile
-$SED -i 's/a2enmod rewrite/a2enmod rewrite xsendfile/g' streamer/Dockerfile
 
 set -a
 source .env
@@ -47,6 +41,16 @@ docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYS
 # create docker volumes and copy in their respective configuration files. Make sure to use
 # the configuration values from the .env file
 echo -e "\033[32mBuilding ${STREAMER_HOSTNAME} streaming site\033[39m"
+
+# Try to install the AVideo software
+
+# The images don't build if we use PHP 7.4 (which is what is installed
+# if we do 'FROM php:7-apache'), so we manually downgrade to PHP 7.3
+$SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' streamer/Dockerfile
+
+# Adjustments to make the 'download' button work correctly
+$SED -i 's/apt-get install -y/apt-get install -y libapache2-mod-xsendfile/g' streamer/Dockerfile
+$SED -i 's/a2enmod rewrite/a2enmod rewrite xsendfile/g' streamer/Dockerfile
 docker-compose up --no-start streamer
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/streamer/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/streamer/configuration.php
@@ -55,6 +59,7 @@ docker run --rm -v $PWD:/source -v gulu_streamer_videos:/dest -w /source alpine 
 git checkout -- config/streamer/configuration.php
 
 echo -e "\033[32mBuilding ${ENCODER_HOSTNAME} video encoder site\033[39m"
+$SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' encoder/Dockerfile
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/encoder/configuration.php
@@ -66,7 +71,6 @@ git checkout -- config/encoder/configuration.php
 # get the coursera downloader
 # -> use the repository that has a fix for https://github.com/coursera-dl/coursera-dl/issues/702
 echo -e "\033[32mInstalling Coursera downloader\033[39m"
-git clone https://github.com/e-learning-archive/coursera-dl.git
 
 # Change the Dockerfile so that it installs the version from the cloned repository
 $SED -i '/^ARG VERSION/i ADD . \/app' coursera-dl/Dockerfile
@@ -76,7 +80,6 @@ docker-compose up --no-start coursera
 
 # get the edX downloader
 echo -e "\033[32mInstalling edX downloader\033[39m"
-git clone https://github.com/e-learning-archive/edx-dl.git
 docker-compose up --no-start edx
 
 
