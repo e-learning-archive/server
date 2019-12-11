@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # we checkout a 'known good version' of the required software
-echo -e "\e[32mGetting AVideo source code\e[39m"
+echo -e '\033[32mGetting AVideo source code\033[39m'
 git clone https://github.com/WWBN/AVideo.git streamer || true
 cd streamer && git reset --hard 2dae06ebdb9f3c912e86b5a96baf0a32f3d59972 && cd ..
 git clone https://github.com/WWBN/AVideo-Encoder.git encoder || true
@@ -27,13 +27,13 @@ set -a
 source .env
 
 # Start database
-echo -e "\e[32mInstalling database\e[39m"
+echo -e "\033[32mInstalling database\033[39m"
 docker-compose up --no-start db
 docker-compose start db
 sleep 10
 
 # load databases
-echo -e "\e[32mCreating users & loading database dumps\e[39m"
+echo -e "\033[32mCreating users & loading database dumps\033[39m"
 cat config/streamer.sql | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 cat config/encoder.sql | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
@@ -41,7 +41,7 @@ docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYS
 
 # create docker volumes and copy in their respective configuration files. Make sure to use
 # the configuration values from the .env file
-echo -e "\e[32mBuilding ${STREAMER_HOSTNAME} streaming site\e[39m"
+echo -e "\033[32mBuilding ${STREAMER_HOSTNAME} streaming site\033[39m"
 docker-compose up --no-start streamer
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/streamer/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/streamer/configuration.php
@@ -49,7 +49,7 @@ $SED -i s/STREAMER_HOSTNAME/${STREAMER_HOSTNAME}/g config/streamer/configuration
 docker run --rm -v $PWD:/source -v gulu_streamer_videos:/dest -w /source alpine cp config/streamer/configuration.php /dest
 git checkout -- config/streamer/configuration.php
 
-echo -e "\e[32mBuilding ${ENCODER_HOSTNAME} video encoder site\e[39m"
+echo -e "\033[32mBuilding ${ENCODER_HOSTNAME} video encoder site\033[39m"
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/encoder/configuration.php
@@ -58,5 +58,5 @@ docker run --rm -v $PWD:/source -v gulu_encoder_videos:/dest -w /source alpine c
 git checkout -- config/encoder/configuration.php
 
 # finally, bring everything online
-echo -e "\e[32mStarting services\e[39m"
+echo -e "\033[32mStarting services\033[39m"
 docker-compose up -d
