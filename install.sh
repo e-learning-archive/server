@@ -9,10 +9,8 @@ fi
 
 # we checkout a 'known good version' of the required software
 echo -e '\033[32mGetting AVideo source code\033[39m'
-git clone https://github.com/WWBN/AVideo.git streamer || true
-cd streamer && git reset --hard 2dae06ebdb9f3c912e86b5a96baf0a32f3d59972 && cd ..
-git clone https://github.com/WWBN/AVideo-Encoder.git encoder || true
-cd streamer && git reset --hard b5cca3ef906ce9659f3249b7319374e2c74d8217 && cd ..
+git clone https://github.com/e-learning-archive/AVideo.git streamer || true
+git clone https://github.com/e-learning-archive/AVideo-Encoder.git encoder || true
 
 # if the 'gsed' command exists, use that - otherwise, default to 'sed'
 if [ -x "$(command -v gsed)" ]; then
@@ -23,12 +21,12 @@ fi
 
 # The images don't build if we use PHP 7.4 (which is what is installed
 # if we do 'FROM php:7-apache'), so we manually downgrade to PHP 7.3
-$SED -i "s/FROM php:7-apache/FROM php:7.3-apache/g" streamer/Dockerfile
-$SED -i "s/FROM php:7-apache/FROM php:7.3-apache/g" encoder/Dockerfile
+$SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' streamer/Dockerfile
+$SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' encoder/Dockerfile
 
 # Adjustments to make the 'download' button work correctly
-$SED -i "s/apt-get install -y/apt-get install -y libapache2-mod-xsendfile/g" streamer/Dockerfile
-$SED -i "s/a2enmod rewrite/a2enmod rewrite xsendfile/g" streamer/Dockerfile
+$SED -i 's/apt-get install -y/apt-get install -y libapache2-mod-xsendfile/g' streamer/Dockerfile
+$SED -i 's/a2enmod rewrite/a2enmod rewrite xsendfile/g' streamer/Dockerfile
 
 set -a
 source .env
