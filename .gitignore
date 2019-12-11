@@ -1,3 +1,6 @@
 /encoder/
 /streamer/
 /.env
+/coursera-dl/
+/edx-dl/
+/downloads/
