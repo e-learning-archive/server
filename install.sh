@@ -33,8 +33,8 @@ sleep 10
 
 # load databases
 echo -e "\033[32mCreating users & loading database dumps\033[39m"
-cat config/streamer.sql | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
-cat config/encoder.sql | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
+cat config/streamer.sql | $SED s/STREAMER_URL/${STREAMER_URL}/g | $SED s/ENCODER_URL/${ENCODER_URL}/g | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
+cat config/encoder.sql | $SED s/STREAMER_URL/${STREAMER_URL}/g | $SED s/ENCODER_URL/${ENCODER_URL}/g | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
 docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON encoder.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
 
