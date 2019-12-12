@@ -1,12 +1,16 @@
 #!/bin/bash
 
+echo -e '\033[34mChecking requirements\033[39m'
+
 # check preconditions: an .env file
 if ! [ -f '.env' ]; then
-  echo -e '\033[32mThe .env file does not exist!\033[39m'
+  echo -e '\033[31m\xE2\x9C\x98 The .env file does not exist!\n\033[39m'
   echo "Create one by copying the .env.example file and adjusting the values."
   echo "Exiting."
   exit 1
 fi
+
+printf "\033[32m\xE2\x9C\x94 .env file is present\n\033[39m"
 
 
 # check if docker is running
@@ -14,12 +18,13 @@ docker info >/dev/null 2>&1
 exitCode=$?
 
 if [ $exitCode -ne 0 ]; then
-  echo -e '\033[32mDocker not running!\033[39m'
+  echo -e '\033[31m\xE2\x9C\x98 Docker not running!\n\033[39m'
   echo "You need to have a working Docker installation to run this script."
   echo "You can validate if you have setup Docker correctly by running 'docker info'."
   echo "Exiting."
   exit 2
 fi
+printf "\033[32m\xE2\x9C\x94 Docker is installed\n\n\n\033[39m"
 
 # we checkout all the required software
 download() {

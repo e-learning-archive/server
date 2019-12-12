@@ -7,7 +7,7 @@ docker info >/dev/null 2>&1
 exitCode=$?
 
 if [ $exitCode -ne 0 ]; then
-  echo -e '\033[32mDocker not running!\033[39m'
+  echo -e '\033[31m\xE2\x9C\x98 Docker not running!\n\033[39m'
   echo "You need to have a working Docker installation to run this script."
   echo "You can validate if you have setup Docker correctly by running 'docker info'."
   echo "Exiting."
