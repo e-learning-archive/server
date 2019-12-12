@@ -29,7 +29,7 @@ download() {
   echo -e "\033[34m- ${desc}\033[39m"
 
   if ! [ -d $dir ]; then
-    git clone  $dir || true
+    git clone $repo $dir || true
   else
     echo -e "  ⤏ fetching latest version"
     pwd=$(pwd)
