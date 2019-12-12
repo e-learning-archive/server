@@ -84,7 +84,7 @@ $SED -i 's/a2enmod rewrite/a2enmod rewrite xsendfile/g' src/streamer/Dockerfile
 docker-compose up --no-start streamer
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/streamer/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/streamer/configuration.php
-$SED -i s/STREAMER_HOSTNAME/${STREAMER_HOSTNAME}/g config/streamer/configuration.php
+$SED -i s%STREAMER_HOSTNAME%${STREAMER_URL}%g config/streamer/configuration.php
 docker run --rm -v $PWD:/source -v gulu_streamer_videos:/dest -w /source alpine cp config/streamer/configuration.php /dest
 git checkout -- config/streamer/configuration.php
 
@@ -93,7 +93,7 @@ $SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' src/encoder/Dockerfile
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/encoder/configuration.php
-$SED -i s/ENCODER_HOSTNAME/${ENCODER_HOSTNAME}/g config/encoder/configuration.php
+$SED -i s%ENCODER_HOSTNAME%${ENCODER_URL}%g config/encoder/configuration.php
 docker run --rm -v $PWD:/source -v gulu_encoder_videos:/dest -w /source alpine cp config/encoder/configuration.php /dest
 git checkout -- config/encoder/configuration.php
 

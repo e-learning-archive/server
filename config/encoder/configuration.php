@@ -1,5 +1,5 @@
 <?php
-$global['webSiteRootURL'] = 'http://ENCODER_HOSTNAME/';
+$global['webSiteRootURL'] = 'ENCODER_URL';
 $global['systemRootPath'] = '/var/www/html/';
 
 $global['disableConfigurations'] = false;
