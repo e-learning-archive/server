@@ -28,14 +28,14 @@ download() {
   desc=$3
   echo -e "\033[34m- ${desc}\033[39m"
 
-  if ! [ -d $dir ]; then
-    git clone $repo $dir || true
+  if ! [ -d "$dir" ]; then
+    git clone "$repo" "$dir" || true
   else
     echo -e "  ⤏ fetching latest version"
     pwd=$(pwd)
-    cd $dir
+    cd "$dir"
     git pull
-    cd $pwd
+    cd "$pwd"
   fi
 }
 
@@ -47,9 +47,9 @@ download https://github.com/e-learning-archive/edx-dl.git src/edx-dl "edX downlo
 
 # if the 'gsed' command exists, use that - otherwise, default to 'sed'
 if [ -x "$(command -v gsed)" ]; then
-  SED=`which gsed`
+  SED=$(which gsed)
 else
-  SED=`which sed`
+  SED=$(which sed)
 fi
 
 set -a
@@ -64,10 +64,10 @@ sleep 20
 
 # load databases
 echo -e "\033[34m- Creating users & loading database dumps\033[39m"
-cat config/streamer.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
-cat config/encoder.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
-docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
-docker exec -i `docker-compose ps -q db` /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON encoder.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
+cat config/streamer.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
+cat config/encoder.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
+docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
+docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON encoder.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
 
 # create docker volumes and copy in their respective configuration files. Make sure to use
 # the configuration values from the .env file
