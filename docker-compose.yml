@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.4'
 
 services:
   db:
@@ -62,6 +62,9 @@ services:
       - ./downloads/ed-x/:/Downloaded
 
 volumes:
-  db_data: {}
-  encoder_videos: {}
-  streamer_videos: {}
+  db_data:
+    name: db_data
+  encoder_videos:
+    name: encoder_videos
+  streamer_videos:
+    name: streamer_videos
