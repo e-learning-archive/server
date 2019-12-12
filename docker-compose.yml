@@ -14,9 +14,9 @@ services:
       - "3306"
 
   streamer:
-    build: streamer/
+    build: src/streamer/
     volumes:
-      - ./streamer:/var/www/html/
+      - ./src/streamer:/var/www/html/
       - streamer_videos:/var/www/html/videos/
     environment:
       VIRTUAL_HOST: "${STREAMER_HOSTNAME}"
@@ -27,9 +27,9 @@ services:
       - db
 
   encoder:
-    build: encoder/
+    build: src/encoder/
     volumes:
-      - ./encoder:/var/www/html/
+      - ./src/encoder:/var/www/html/
       - encoder_videos:/var/www/html/videos/
     environment:
       VIRTUAL_HOST: "${ENCODER_HOSTNAME}"
@@ -52,14 +52,12 @@ services:
       - encoder
 
   coursera:
-    build:
-      context: coursera-dl
+    build: src/coursera-dl
     volumes:
       - ./downloads/coursera/:/courses
 
   edx:
-    build:
-      context: edx-dl
+    build: src/edx-dl
     volumes:
       - ./downloads/ed-x/:/Downloaded
 

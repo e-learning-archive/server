@@ -4,3 +4,5 @@
 /coursera-dl/
 /edx-dl/
 /downloads/
+/src/*
+!/src/.gitkeep
