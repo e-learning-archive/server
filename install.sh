@@ -112,7 +112,7 @@ $SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' src/encoder/Dockerfile
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/encoder/configuration.php
-$SED -i s%ENCODER_HOSTNAME%${ENCODER_URL}%g config/encoder/configuration.php
+$SED -i s%ENCODER_URL%${ENCODER_URL}%g config/encoder/configuration.php
 docker run --rm -v $PWD:/source -v encoder_videos:/dest -w /source alpine cp config/encoder/configuration.php /dest
 git checkout -- config/encoder/configuration.php
 
