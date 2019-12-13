@@ -44,7 +44,7 @@ download() {
   repo=$1
   dir=$2
   desc=$3
-  echo -e "\033[34m- ${desc}\033[39m"
+  echo -e "\033[32m- ${desc}\033[39m"
 
   if ! [ -d "$dir" ]; then
     git clone "$repo" "$dir" || true
@@ -57,7 +57,7 @@ download() {
   fi
 }
 
-echo -e '\033[32mGetting all source code\033[39m'
+echo -e '\033[34mGetting all source code\033[39m'
 download https://github.com/e-learning-archive/AVideo.git src/streamer "video streamer"
 download https://github.com/e-learning-archive/AVideo-Encoder.git src/encoder "video encoder"
 download https://github.com/e-learning-archive/coursera-dl.git src/coursera-dl "coursera downloader"
@@ -74,14 +74,14 @@ set -a
 source .env
 
 # Start database
-echo -e "\033[32mInstalling database\033[39m"
+echo -e "\033[34mInstalling database\033[39m"
 docker-compose up --no-start db
 docker-compose start db
-echo -e "\033[34m- Waiting for database to come online\033[39m"
+echo -e "\033[32m- Waiting for database to come online\033[39m"
 sleep 20
 
 # load databases
-echo -e "\033[34m- Creating users & loading database dumps\033[39m"
+echo -e "\033[32m- Creating users & loading database dumps\033[39m"
 cat config/streamer.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 cat config/encoder.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
@@ -89,7 +89,7 @@ docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MY
 
 # create docker volumes and copy in their respective configuration files. Make sure to use
 # the configuration values from the .env file
-echo -e "\033[32mBuilding ${STREAMER_HOSTNAME} streaming site\033[39m"
+echo -e "\033[34mBuilding ${STREAMER_HOSTNAME} streaming site\033[39m"
 
 # Try to install the AVideo software
 
@@ -107,7 +107,7 @@ $SED -i s%STREAMER_HOSTNAME%${STREAMER_URL}%g config/streamer/configuration.php
 docker run --rm -v $PWD:/source -v streamer_videos:/dest -w /source alpine cp config/streamer/configuration.php /dest
 git checkout -- config/streamer/configuration.php
 
-echo -e "\033[32mBuilding ${ENCODER_HOSTNAME} video encoder site\033[39m"
+echo -e "\033[34mBuilding ${ENCODER_HOSTNAME} video encoder site\033[39m"
 $SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' src/encoder/Dockerfile
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
@@ -119,7 +119,7 @@ git checkout -- config/encoder/configuration.php
 
 # get the coursera downloader
 # -> use the repository that has a fix for https://github.com/coursera-dl/coursera-dl/issues/702
-echo -e "\033[32mInstalling Coursera downloader\033[39m"
+echo -e "\033[34mInstalling Coursera downloader\033[39m"
 
 # Change the Dockerfile so that it installs the version from the cloned repository
 $SED -i '/^ARG VERSION/i ADD . \/app' src/coursera-dl/Dockerfile
@@ -128,13 +128,13 @@ $SED -i 's/ENTRYPOINT \["coursera-dl"\]/ENTRYPOINT \["\/app\/coursera-dl"\]/g' s
 docker-compose up --no-start coursera
 
 # get the edX downloader
-echo -e "\033[32mInstalling edX downloader\033[39m"
+echo -e "\033[34mInstalling edX downloader\033[39m"
 docker-compose up --no-start edx
 
 # build proxy
-echo -e "\033[32mBuild proxy\033[39m"
+echo -e "\033[34mBuild proxy\033[39m"
 docker-compose up --no-start nginx-proxy
 
 # finally, bring everything online
-echo -e "\033[32mStarting services\033[39m"
+echo -e "\033[34mStarting services\033[39m"
 docker-compose up -d
