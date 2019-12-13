@@ -40,10 +40,9 @@ CREATE TABLE `configurations` (
 --
 -- Dumping data for table `configurations`
 --
-
 LOCK TABLES `configurations` WRITE;
 /*!40000 ALTER TABLE `configurations` DISABLE KEYS */;
-INSERT INTO `configurations` VALUES (1,'STREAMER_URL',1,'2019-12-04 14:55:49','2019-12-04 14:55:49','3.0',1);
+INSERT INTO `configurations` VALUES (1,'STREAMER_URL\nhttp://streamer:8000',1,'2019-12-04 14:55:49','2019-12-04 14:55:49','3.0',1);
 /*!40000 ALTER TABLE `configurations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,6 +142,7 @@ CREATE TABLE `streamers` (
 LOCK TABLES `streamers` WRITE;
 /*!40000 ALTER TABLE `streamers` DISABLE KEYS */;
 INSERT INTO `streamers` VALUES (1,'STREAMER_URL','admin','fcbc6f8eb22ea649e8c9da9c016c2bea',1,1,'2019-12-04 14:55:49','2019-12-05 08:37:00');
+INSERT INTO `streamers` VALUES (2,'http://streamer:8000','admin','fcbc6f8eb22ea649e8c9da9c016c2bea',1,1,'2019-12-04 14:55:49','2019-12-05 08:37:00');
 /*!40000 ALTER TABLE `streamers` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
