@@ -3,7 +3,7 @@ $global['webSiteRootURL'] = 'ENCODER_URL';
 $global['systemRootPath'] = '/var/www/html/';
 
 $global['disableConfigurations'] = false;
-$global['disableBulkEncode'] = false;
+$global['disableBulkEncode'] = true;
 $global['disableWebM'] = false;
 
 $mysqlHost = 'db';
