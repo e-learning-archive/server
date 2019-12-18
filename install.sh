@@ -106,6 +106,7 @@ $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/streamer/configuration.php
 $SED -i s%STREAMER_HOSTNAME%${STREAMER_URL}%g config/streamer/configuration.php
 docker run --rm -v $PWD:/source -v streamer_videos:/dest -w /source alpine cp config/streamer/configuration.php /dest
 git checkout -- config/streamer/configuration.php
+cd src/streamer && git checkout -- Dockerfile && cd ../..
 
 echo -e "\n\n\033[34mBuilding ${ENCODER_HOSTNAME} video encoder site\033[39m"
 
@@ -125,6 +126,7 @@ $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/encoder/configuration.php
 $SED -i s%ENCODER_URL%${ENCODER_URL}%g config/encoder/configuration.php
 docker run --rm -v $PWD:/source -v encoder_videos:/dest -w /source alpine cp config/encoder/configuration.php /dest
 git checkout -- config/encoder/configuration.php
+cd src/encoder && git checkout -- Dockerfile && cd ../..
 
 
 # get the coursera downloader
@@ -136,6 +138,7 @@ $SED -i '/^ARG VERSION/i ADD . \/app' src/coursera-dl/Dockerfile
 $SED -i 's/RUN pip install coursera-dl==\$VERSION/RUN pip install app -r app\/requirements.txt/g' src/coursera-dl/Dockerfile
 $SED -i 's/ENTRYPOINT \["coursera-dl"\]/ENTRYPOINT \["\/app\/coursera-dl"\]/g' src/coursera-dl/Dockerfile
 docker-compose up --no-start coursera
+cd src/coursera-dl && git checkout -- Dockerfile && cd ../..
 
 # get the edX downloader
 echo -e "\n\n\033[34mInstalling edX downloader\033[39m"
