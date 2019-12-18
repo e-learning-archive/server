@@ -65,6 +65,9 @@ checkService 'coursera'
 checkService 'edx'
 printf "\033[32m\xE2\x9C\x94 all services installed\n\n\n\033[39m"
 
+# make sure everything in 'downloads' folder is writeable by processes inside Docker
+find downloads -type d -exec chmod 777 {} \;
+find downloads -type f -exec chmod 666 {} \;
 
 echo -e '\033[34mStarting services\033[39m'
 docker-compose up -d
