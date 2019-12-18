@@ -118,7 +118,7 @@ $SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' src/encoder/Dockerfile
 $SED -i 's/apt-get install -y/apt-get install -y docker-compose/g' src/encoder/Dockerfile
 
 # Give docker access to 'www-data' user
-$SED -i '/^RUN pip/i RUN groupadd docker && usermod -aG docker www-data && chown root:docker /var/run/docker.sock' src/encoder/Dockerfile
+$SED -i '/^RUN pip/i RUN usermod -aG docker www-data' src/encoder/Dockerfile
 
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
@@ -127,6 +127,10 @@ $SED -i s%ENCODER_URL%${ENCODER_URL}%g config/encoder/configuration.php
 docker run --rm -v $PWD:/source -v encoder_videos:/dest -w /source alpine cp config/encoder/configuration.php /dest
 git checkout -- config/encoder/configuration.php
 cd src/encoder && git checkout -- Dockerfile && cd ../..
+# Make sure docker.sock gives access to users in the 'docker' group
+docker-compose start encoder
+docker-compose exec --user root -d encoder chown root:docker /var/run/docker.sock
+docker-compose stop encoder
 
 
 # get the coursera downloader
