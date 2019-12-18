@@ -31,6 +31,7 @@ services:
     volumes:
       - ./src/encoder:/var/www/html/
       - encoder_videos:/var/www/html/videos/
+      - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
       VIRTUAL_HOST: "${ENCODER_HOSTNAME}"
       VIRTUAL_PORT: 8000

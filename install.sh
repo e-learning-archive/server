@@ -93,7 +93,7 @@ echo -e "\n\n\033[34mBuilding ${STREAMER_HOSTNAME} streaming site\033[39m"
 
 # Try to install the AVideo software
 
-# The images don't build if we use PHP 7.4 (which is what is installed
+# The image doesn't build if we use PHP 7.4 (which is what is installed
 # if we do 'FROM php:7-apache'), so we manually downgrade to PHP 7.3
 $SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' src/streamer/Dockerfile
 
@@ -108,7 +108,17 @@ docker run --rm -v $PWD:/source -v streamer_videos:/dest -w /source alpine cp co
 git checkout -- config/streamer/configuration.php
 
 echo -e "\n\n\033[34mBuilding ${ENCODER_HOSTNAME} video encoder site\033[39m"
+
+# The image doesn't build if we use PHP 7.4 (which is what is installed
+# if we do 'FROM php:7-apache'), so we manually downgrade to PHP 7.3
 $SED -i 's/FROM php:7-apache/FROM php:7.3-apache/g' src/encoder/Dockerfile
+
+# Make 'docker-compose' available within the container
+$SED -i 's/apt-get install -y/apt-get install -y docker-compose/g' src/encoder/Dockerfile
+
+# Give docker access to 'www-data' user
+$SED -i '/^RUN pip/i RUN groupadd docker && usermod -aG docker www-data && chown root:docker /var/run/docker.sock' src/encoder/Dockerfile
+
 docker-compose up --no-start encoder
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/encoder/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/encoder/configuration.php
