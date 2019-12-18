@@ -137,6 +137,8 @@ docker-compose exec --user root -d encoder chown root:docker /var/run/docker.soc
 docker-compose stop encoder
 
 
+
+
 # get the coursera downloader
 # -> use the repository that has a fix for https://github.com/coursera-dl/coursera-dl/issues/702
 echo -e "\n\n\033[34mInstalling Coursera downloader\033[39m"
@@ -145,7 +147,8 @@ echo -e "\n\n\033[34mInstalling Coursera downloader\033[39m"
 cd src/coursera-dl && git checkout -- Dockerfile && cd ../..
 $SED -i '/^ARG VERSION/i ADD . \/app' src/coursera-dl/Dockerfile
 $SED -i 's/RUN pip install coursera-dl==\$VERSION/RUN pip install app -r app\/requirements.txt/g' src/coursera-dl/Dockerfile
-$SED -i 's/ENTRYPOINT \["coursera-dl"\]/ENTRYPOINT \["\/app\/coursera-dl"\]/g' src/coursera-dl/Dockerfile
+$SED -i 's/ENTRYPOINT \["coursera-dl"\]/ENTRYPOINT \["tail", "-f", "\/dev\/null"\]/g' src/coursera-dl/Dockerfile
+$SED -i 's/CMD \["--help"\]//g' src/coursera-dl/Dockerfile
 docker-compose up --no-start coursera
 
 # get the edX downloader
