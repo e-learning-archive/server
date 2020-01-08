@@ -107,7 +107,7 @@ $SED -i 's/a2enmod rewrite/a2enmod rewrite xsendfile/g' src/streamer/Dockerfile
 docker-compose up --no-start streamer
 $SED -i s/MYSQL_USER/${MYSQL_USER}/g config/streamer/configuration.php
 $SED -i s/MYSQL_PASSWORD/${MYSQL_PASSWORD}/g config/streamer/configuration.php
-$SED -i s%STREAMER_HOSTNAME%${STREAMER_URL}%g config/streamer/configuration.php
+$SED -i s%STREAMER_URL%${STREAMER_URL}%g config/streamer/configuration.php
 docker run --rm -v $PWD:/source -v streamer_videos:/dest -w /source alpine cp config/streamer/configuration.php /dest
 git checkout -- config/streamer/configuration.php
 
