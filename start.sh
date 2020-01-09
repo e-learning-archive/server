@@ -71,3 +71,6 @@ find downloads -type f -exec chmod 666 {} \;
 
 echo -e '\033[34mStarting services\033[39m'
 docker-compose up -d
+
+# make sure we can use docker from within the 'encoder' container
+docker-compose exec --user root -d encoder chown root:docker /var/run/docker.sock
