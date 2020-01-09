@@ -7,4 +7,4 @@ rm -rf src/encoder/
 rm -rf src/streamer/
 rm -rf src/coursera-dl/
 rm -rf src/edx-dl/
-
+rm -rf downloads/
