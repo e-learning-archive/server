@@ -31,6 +31,8 @@ services:
     volumes:
       - ./src/encoder:/var/www/html/
       - encoder_videos:/var/www/html/videos/
+      - ./downloads/coursera/:/var/www/coursera/
+      - ./downloads/ed-x/:/var/www/ed-x/
       - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
       VIRTUAL_HOST: "${ENCODER_HOSTNAME}"
