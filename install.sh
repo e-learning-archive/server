@@ -153,6 +153,8 @@ docker-compose up --no-start coursera
 
 # get the edX downloader
 echo -e "\n\n\033[34mInstalling edX downloader\033[39m"
+$SED -i 's/ENTRYPOINT \["edx-dl"\]/ENTRYPOINT \["tail", "-f", "\/dev\/null"\]/g' src/edx-dl/Dockerfile
+$SED -i 's/CMD \["--help"\]//g' src/edx-dl/Dockerfile
 docker-compose up --no-start edx
 
 # build proxy
