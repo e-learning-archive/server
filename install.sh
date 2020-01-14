@@ -13,6 +13,9 @@ fi
 printf "\033[32m\xE2\x9C\x94 .env file is present\n\033[39m"
 
 # make sure everything in 'downloads' folder is writeable by processes inside Docker
+if ! [ -d 'downloads' ]; then
+  mkdir downloads
+fi
 find downloads -type d -exec chmod 777 {} \;
 find downloads -type f -exec chmod 666 {} \;
 
