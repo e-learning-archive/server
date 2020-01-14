@@ -12,6 +12,9 @@ fi
 
 printf "\033[32m\xE2\x9C\x94 .env file is present\n\033[39m"
 
+set -a
+source .env
+
 # make sure everything in 'downloads' folder is writeable by processes inside Docker
 if ! [ -d 'downloads' ]; then
   mkdir downloads
@@ -84,9 +87,6 @@ else
   SED=$(which sed)
 fi
 
-set -a
-source .env
-
 # Start database
 echo -e "\n\n\033[34mInstalling database\033[39m"
 docker-compose up --no-start db
@@ -98,8 +98,8 @@ sleep 20
 echo -e "\033[32m- Creating users & loading database dumps\033[39m"
 cat config/streamer.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 cat config/encoder.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
-docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
-docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON encoder.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
+docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
+docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON encoder.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
 
 # create docker volumes and copy in their respective configuration files. Make sure to use
 # the configuration values from the .env file
