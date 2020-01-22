@@ -15,6 +15,12 @@ printf "\033[32m\xE2\x9C\x94 .env file is present\n\033[39m"
 set -a
 source .env
 
+# Make sure the user provided a username and password for the admin user
+if [ -z "${ADMIN_USERNAME}" ] || [ -z "${ADMIN_PASSWORD}" ]; then
+  echo -e '\033[31m\xE2\x9C\x98 You need to provide both a username and a password in the .env file!\n\033[39m'
+  exit 2
+fi
+
 # make sure everything in 'downloads' folder is writeable by processes inside Docker
 if ! [ -d 'downloads' ]; then
   mkdir downloads
@@ -31,7 +37,7 @@ if [ $exitCode -ne 0 ]; then
   echo "You need to have a working Docker installation to run this script."
   echo "You can validate if you have setup Docker correctly by running 'docker info'."
   echo "Exiting."
-  exit 2
+  exit 3
 fi
 printf "\033[32m\xE2\x9C\x94 Docker is installed\n\033[39m"
 
@@ -44,9 +50,39 @@ if [ $exitCode -ne 0 ]; then
   echo "You need to have a working Docker Compose installation to run this script."
   echo "You can validate if you have setup Docker Compose correctly by running 'docker-compose version'."
   echo "Exiting."
-  exit 2
+  exit 4
 fi
-printf "\033[32m\xE2\x9C\x94 Docker Compose is installed\n\n\n\033[39m"
+printf "\033[32m\xE2\x9C\x94 Docker Compose is installed\n\033[39m"
+
+# check if we can do the password hashing, and then do it
+openssl version >/dev/null 2>&1
+exitCode=$?
+
+if [ $exitCode -eq 0 ]; then
+  printf "\033[32m\xE2\x9C\x94 OpenSSL is available for password hashing\n\033[39m"
+
+  # - calculate hashed password, derived from encryptPassword in streamer/objects/functions.php,
+  #   but adapted to use the openSSL binary instead. This way we don't have to force people to install
+  #   php on an otherwise empty server.
+  HASHED_ADMIN_PASSWORD=$(echo -n "${ADMIN_PASSWORD}" | openssl dgst -sha1 | tr -d '\n' | openssl dgst -whirlpool | tr -d '\n' | openssl dgst -md5) # their security is a joke
+else
+  php -v >/dev/null 2>&1
+  exitCode=$?
+
+  if [ $exitCode -eq 0 ]; then
+    printf "\033[32m\xE2\x9C\x94 PHP is available for password hashing\n\033[39m"
+    HASHED_ADMIN_PASSWORD=$(php -r "echo md5(hash('whirlpool', sha1('${ADMIN_PASSWORD}')));") # their security is a joke
+  else
+    echo -e '\033[31m\xE2\x9C\x98 Both OpenSSL and PHP are not available!\n\033[39m'
+    echo "This script needs either OpenSSL __or__ PHP to perform password hashing."
+    echo "Please install one of the two."
+    echo "Exiting."
+    exit 5
+  fi
+fi
+
+
+echo -e "\n\n"
 
 # we checkout all the required software
 download() {
@@ -96,7 +132,7 @@ sleep 20
 
 # load databases
 echo -e "\033[32m- Creating users & loading database dumps\033[39m"
-cat config/streamer.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
+cat config/streamer.sql | $SED s%ADMIN_USERNAME%${ADMIN_USERNAME}%g | $SED s%ADMIN_PASSWORD%${HASHED_ADMIN_PASSWORD}%g | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 cat config/encoder.sql | $SED s%STREAMER_URL%${STREAMER_URL}%g | $SED s%ENCODER_URL%${ENCODER_URL}%g | docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password=${MYSQL_ROOT_PASSWORD}
 docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON video.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
 docker exec -i $(docker-compose ps -q db) /usr/bin/mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON encoder.* TO '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'"
